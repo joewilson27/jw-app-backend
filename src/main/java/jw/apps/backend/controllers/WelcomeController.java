@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import jw.apps.backend.dto.response.ApiResponseDto;
+import jw.apps.backend.dto.response.ApiResponse;
 
 @RestController
 @RequestMapping("/api/welcome")
@@ -21,7 +21,7 @@ public class WelcomeController {
   }
 
   @GetMapping("/standard-response")
-  public ResponseEntity<ApiResponseDto<List<String>>> standardResponse() { 
+  public ResponseEntity<ApiResponse<List<String>>> standardResponse() { 
 
     List<String> data = new ArrayList<>();
     data.add("Tesla");
@@ -29,7 +29,7 @@ public class WelcomeController {
     data.add("GMC");
     data.add("Chevrolet");
 
-    ApiResponseDto<List<String>> responseData = new ApiResponseDto<>();
+    ApiResponse<List<String>> responseData = new ApiResponse<>();
     responseData.setStatus("success");
     responseData.setMessage("Data retrieved successfully with standard response");
     responseData.setData(data);
@@ -38,7 +38,7 @@ public class WelcomeController {
   }
 
   @GetMapping("/standard-response-builder")
-  public ApiResponseDto<List<String>> standardResponseBuilder() {
+  public ApiResponse<List<String>> standardResponseBuilder() {
 
     List<String> data = new ArrayList<>();
     data.add("Tesla");
@@ -46,7 +46,7 @@ public class WelcomeController {
     data.add("GMC");
     data.add("Chevrolet");
 
-    return ApiResponseDto.<List<String>>builder()
+    return ApiResponse.<List<String>>builder()
                           .status("success")
                           .message("Data retrieved successfully with standard response builder")
                           .data(data)

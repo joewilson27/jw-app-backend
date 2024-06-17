@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ApiResponseDto<T> {
+public class ApiResponse<T> {
 
   private String status;
 
@@ -19,9 +19,9 @@ public class ApiResponseDto<T> {
 
   private T data;
 
-  private PaginationDto pagination;
+  private PaginationResponse pagination;
   
-  private ErrorDto error;
+  private ErrorResponse error;
 
   @Builder.Default
   private LocalDateTime timestamp = LocalDateTime.now();

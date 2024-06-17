@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PaginationDto {
+public class PaginationResponse {
 
   private int currentPage;
 
