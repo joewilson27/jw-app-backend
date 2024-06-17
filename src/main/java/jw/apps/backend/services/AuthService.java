@@ -50,6 +50,15 @@ public class AuthService {
     return false;
   }
   
+  public Boolean existsByUsernameOrEmail(String username, String email) {
+
+    if (userRepository.existsByEmailOrUsername(username, email)) {
+      return true;
+    }
+
+    return false;
+  }
+
   @Transactional
   public void signupUser(SignupRequest request) {
     // validate request
@@ -64,8 +73,10 @@ public class AuthService {
       throw new BadRequestException("Email is already in use!");
     }
 
-    // 2. Check username and email exists - one time check. TO-DO:
-
+    // 2. Check username and email exists - one time check.
+    // if (existsByUsernameOrEmail(request.getUsername(), request.getEmail())) {
+    //   throw new BadRequestException("Username or Email is already in use!");
+    // }
 
     // Create a new user
     UserEntity user = new UserEntity();

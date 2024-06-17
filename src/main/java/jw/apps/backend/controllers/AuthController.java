@@ -22,6 +22,18 @@ public class AuthController {
   public ResponseEntity<?> signUp(@RequestBody SignupRequest request) {
     authService.signupUser(request);
     return ResponseEntity.ok(new MessageResponse("User signed up successfully"));
+
+    // this approach if you choose to catch exceptions ConstraintViolationException from ValidationService when validate request
+    // try {
+    //   authService.signupUser(request);
+    //   return ResponseEntity.ok(new MessageResponse("User signed up successfully"));
+    // } catch (ConstraintViolationException ex) {
+    //   Set<ConstraintViolation<?>> violations = ex.getConstraintViolations();
+    //         String errorMessages = violations.stream()
+    //                 .map(violation -> "Field '" + violation.getPropertyPath() + "': " + violation.getMessage())
+    //                 .collect(Collectors.joining(", "));
+    //         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid input request: " + errorMessages);
+    // }
   }
 
 }

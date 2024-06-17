@@ -29,6 +29,8 @@ public class ValidationService {
                     .collect(Collectors.joining(", "));
       
       throw new BadRequestException(errorMessages);
+      
+      //throw new ConstraintViolationException(constraintViolations);
     }
 
   }
