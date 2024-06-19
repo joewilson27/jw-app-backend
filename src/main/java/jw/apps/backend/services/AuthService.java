@@ -4,11 +4,18 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
+import jw.apps.backend.dto.request.SigninRequest;
 import jw.apps.backend.dto.request.SignupRequest;
+import jw.apps.backend.dto.response.AuthLoginResponse;
 import jw.apps.backend.entity.ERole;
 import jw.apps.backend.entity.Role;
 import jw.apps.backend.entity.UserEntity;
@@ -16,6 +23,7 @@ import jw.apps.backend.helpers.BadRequestException;
 import jw.apps.backend.helpers.ResourceNotFoundException;
 import jw.apps.backend.repository.RoleRepository;
 import jw.apps.backend.repository.UserRepository;
+import jw.apps.backend.security.jwt.JwtGenerator;
 
 @Service
 public class AuthService {
@@ -31,6 +39,12 @@ public class AuthService {
 
   @Autowired
   PasswordEncoder passwordEncoder; // make sure that you have set bean password encoder in security config
+  
+  @Autowired
+  AuthenticationManager authenticationManager;
+
+  @Autowired
+  private JwtGenerator jwtGenerator;
   
   public Boolean existsByUsername(String username) {
 
@@ -60,7 +74,7 @@ public class AuthService {
   }
 
   @Transactional
-  public void signupUser(SignupRequest request) {
+  public void signUp(SignupRequest request) {
     // validate request
     validationService.validate(request);
 
@@ -117,6 +131,35 @@ public class AuthService {
 
     user.setRoles(roles);
     userRepository.save(user);
+  }
+
+  public AuthLoginResponse signIn(SigninRequest request) {
+    try {
+      // validate request
+      validationService.validate(request);
+
+      Authentication authentication = authenticationManager.authenticate(
+        new UsernamePasswordAuthenticationToken(
+          request.getUsername(),
+          request.getPassword()
+        )
+      );
+
+      /**
+       * This security context is going to hold all of the authentication details (above) so that whenever the user logs in
+       * they DON'T have to keep logging in and all this stored within the context and Spring Security handles this all for
+       */
+      SecurityContextHolder.getContext().setAuthentication(authentication);
+      String token = jwtGenerator.generateToken(authentication);
+
+      AuthLoginResponse authResponse = new AuthLoginResponse();
+      authResponse.setAccessToken(token);
+      return authResponse;
+    } catch (UsernameNotFoundException e) { 
+      System.out.println("catch UserNotFoundException");
+      throw new ResourceNotFoundException("Invalid username or password");
+    }
+    
   }
 
 }

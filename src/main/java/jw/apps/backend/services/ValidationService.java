@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import jakarta.validation.ConstraintViolation;
 // import jakarta.validation.ConstraintViolationException;
-
+import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
-import jw.apps.backend.helpers.BadRequestException;
+// import jw.apps.backend.helpers.BadRequestException;
 
 
 
@@ -28,9 +28,12 @@ public class ValidationService {
                     .map(violation -> "Field '" + violation.getPropertyPath() + "': " + violation.getMessage())
                     .collect(Collectors.joining(", "));
       
-      throw new BadRequestException(errorMessages);
+      // throw new BadRequestException(errorMessages);
       
-      //throw new ConstraintViolationException(constraintViolations);
+      /**
+       * the error message we set here will get in the custom ConstraintViolationException in GlobalExceptionHandler class
+       */
+      throw new ConstraintViolationException(errorMessages, constraintViolations);
     }
 
   }
