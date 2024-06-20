@@ -15,6 +15,7 @@ import jw.apps.backend.security.jwt.JwtAuthenticationFilter;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -27,6 +28,7 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 @EnableWebSecurity
 public class SecurityConfig {
   
+  @Autowired
   private JwtAuthEntryPoint authEntryPoint;
 
   @Bean
