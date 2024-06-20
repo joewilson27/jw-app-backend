@@ -156,7 +156,6 @@ public class AuthService {
       authResponse.setAccessToken(token);
       return authResponse;
     } catch (UsernameNotFoundException e) { 
-      System.out.println("catch UserNotFoundException");
       throw new ResourceNotFoundException("Invalid username or password");
     }
     

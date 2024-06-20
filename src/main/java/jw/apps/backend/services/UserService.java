@@ -33,12 +33,12 @@ public class UserService implements UserDetailsService {
     // }
     // UserEntity user = userOpt.get();
     // return new User(user.getUsername(), user.getPassword(), mapRolesToAuthorities(user.getRoles()));
-System.out.println("USERNAMEOREMAIL: " + usernameOrEmail);
+
     // 2. find by username and email
     UserEntity user = userRepository.findByUsernameOrEmail(usernameOrEmail).orElseThrow(() -> 
       new UsernameNotFoundException("User not found with username or email: " + usernameOrEmail
     ));
-System.out.println("Print User: " + user);
+
     // 3. find by username
     // UserEntity user = userRepository.findByUsername(usernameOrEmail).orElseThrow(() -> new UsernameNotFoundException("Username not found"));
 
