@@ -117,6 +117,11 @@ public class JwtGenerator {
   // and it will returns a dynamic type of data depend on method who used this getClaimFromToken().
   // for example, for method getUsernameFromToken() this getClaimFromToken() method will return String type,
   // and for isTokenExpired() method will return boolean type.
+  /**
+   * Then, here's the explanation of the following method getClaimFromToken() we have here
+   * - <T> declares a type parameter T for the method (Generic return type). This tells the Java compiler that T can be any type and will be specified when the method is called.
+   * - T immediately following <T> indicates the return type of the method, which will be the same type as the generic type T.
+   */
   private <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
     final Claims claims = getAllClaimsFromToken(token);
     return claimsResolver.apply(claims);
