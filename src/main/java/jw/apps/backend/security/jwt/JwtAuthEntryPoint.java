@@ -7,6 +7,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
@@ -38,7 +39,14 @@ public class JwtAuthEntryPoint implements AuthenticationEntryPoint {
 
     final Map<String, Object> body = new HashMap<>();
     body.put("status", HttpServletResponse.SC_UNAUTHORIZED);
-    body.put("message", authException.getMessage());
+
+    if (authException instanceof BadCredentialsException) {
+      // custom authentication for failure to login
+      body.put("message", "Invalid username or password");
+    } else {
+      // other exception
+      body.put("message", authException.getMessage());
+    }
 
     final ObjectMapper mapper = new ObjectMapper();
     mapper.writeValue(response.getOutputStream(), body);

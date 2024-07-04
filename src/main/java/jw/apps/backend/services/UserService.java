@@ -36,6 +36,8 @@ public class UserService implements UserDetailsService {
 
     // 2. find by username and email
     UserEntity user = userRepository.findByUsernameOrEmail(usernameOrEmail).orElseThrow(() -> 
+      // remember! jwt has a new way to throw an exception, using AuthenticationEntryPoint, so it would go there and refuse 
+      // our exception handle here.
       new UsernameNotFoundException("User not found with username or email: " + usernameOrEmail
     ));
 
