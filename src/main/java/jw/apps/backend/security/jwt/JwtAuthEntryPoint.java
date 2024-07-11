@@ -37,9 +37,13 @@ public class JwtAuthEntryPoint implements AuthenticationEntryPoint {
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
-    final Map<String, Object> body = new HashMap<>();
-    body.put("status", HttpServletResponse.SC_UNAUTHORIZED);
+    // 1. to catch error jwt (all exceptions related to jwt authentication)
+    // final Map<String, Object> body = new HashMap<>();
+    // body.put("status", HttpServletResponse.SC_UNAUTHORIZED);
+    // body.put("message", authException.getMessage());
 
+    // 2. separating between invalid login and other errors authenticating
+    final Map<String, Object> body = new HashMap<>();
     if (authException instanceof BadCredentialsException) {
       // custom authentication for failure to login
       body.put("message", "Invalid username or password");

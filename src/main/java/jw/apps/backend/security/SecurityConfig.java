@@ -10,6 +10,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+// import jw.apps.backend.security.jwt.CustomAuthFailureHandler;
 import jw.apps.backend.security.jwt.JwtAuthEntryPoint;
 import jw.apps.backend.security.jwt.JwtAuthenticationFilter;
 
@@ -31,6 +32,9 @@ public class SecurityConfig {
   @Autowired
   private JwtAuthEntryPoint authEntryPoint;
 
+  // @Autowired
+  // private CustomAuthFailureHandler customAuthFailureHandler;
+
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http
@@ -43,6 +47,11 @@ public class SecurityConfig {
           sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         )
         // end add handling for JWT exceptions
+        // .formLogin(formLogin -> 
+        //   formLogin
+        //            .loginProcessingUrl("/api/auth/signin")
+        //            .failureHandler(customAuthFailureHandler)
+        // )
         .authorizeHttpRequests(auth ->
           auth.requestMatchers("/api/welcome/**").permitAll()
               .requestMatchers("/api/auth/**").permitAll()
