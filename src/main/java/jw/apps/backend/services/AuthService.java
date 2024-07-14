@@ -134,6 +134,7 @@ public class AuthService {
   }
 
   public AuthLoginResponse signIn(SigninRequest request) {
+    System.out.println("1 signIn");
     try {
       // validate request
       validationService.validate(request);

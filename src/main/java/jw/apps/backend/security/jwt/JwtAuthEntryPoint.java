@@ -26,6 +26,7 @@ public class JwtAuthEntryPoint implements AuthenticationEntryPoint {
   @Override
   public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)
       throws IOException, ServletException {
+    System.out.println("4 commence");
     // OLD FASHION
     // response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage());
 
@@ -44,6 +45,7 @@ public class JwtAuthEntryPoint implements AuthenticationEntryPoint {
 
     // 2. separating between invalid login and other errors authenticating
     final Map<String, Object> body = new HashMap<>();
+    body.put("status", HttpServletResponse.SC_UNAUTHORIZED);
     if (authException instanceof BadCredentialsException) {
       // custom authentication for failure to login
       body.put("message", "Invalid username or password");
