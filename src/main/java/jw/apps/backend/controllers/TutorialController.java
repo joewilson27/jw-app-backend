@@ -43,11 +43,11 @@ public class TutorialController {
 
     ApiResponse<Tutorial> responseData = new ApiResponse<>();
     responseData.setStatus("success");
-    responseData.setMessage("Add tutorial data successfully");
+    responseData.setMessage("Data added successfully");
     responseData.setData(add);
 
     return new ResponseEntity<>(responseData, HttpStatus.OK);
-    //return ResponseEntity.ok(new MessageResponse("Add tutorial data successfully")); 
+    //return ResponseEntity.ok(new MessageResponse("Data added successfully")); 
   }
 
 }
