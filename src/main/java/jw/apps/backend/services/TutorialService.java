@@ -1,5 +1,8 @@
 package jw.apps.backend.services;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +42,24 @@ public class TutorialService {
       throw new ConstraintViolationException(e.getMessage(), e.getConstraintViolations());
     } catch (Exception e) {
       throw new InternalServerErrorException("Internal Server Error");
+    }
+  }
+
+  public List<Tutorial> getAllTutorials(String title) {
+    try {
+      List<Tutorial> tutorials = new ArrayList<>();
+
+      if (title == null)
+        tutorialRepository.findAll().forEach(tutorials::add);
+      else
+        tutorialRepository.findByTitleContaining(title).forEach(tutorials::add);
+
+      return tutorials;
+
+    } catch (Exception e) {
+
+      throw new InternalServerErrorException("Internal Server Error");
+      
     }
   }
 

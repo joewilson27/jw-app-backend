@@ -10,22 +10,22 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jw.apps.backend.dto.request.TutorialRequest;
 import jw.apps.backend.dto.response.ApiResponse;
-import jw.apps.backend.dto.response.MessageResponse;
 import jw.apps.backend.entity.Tutorial;
 import jw.apps.backend.services.TutorialService;
 
 @RestController
-@RequestMapping("/api/tutorial")
+@RequestMapping("/api")
 public class TutorialController {
   
   @Autowired
   TutorialService tutorialService;
 
-  @GetMapping("/welcome")
+  @GetMapping("/tutorials/welcome")
   public ResponseEntity<ApiResponse<List<String>>> testTutorial() {
 
     ApiResponse<List<String>> responseData = new ApiResponse<>();
@@ -33,10 +33,21 @@ public class TutorialController {
     responseData.setMessage("Welcome to Module Tutorial");
   
     return new ResponseEntity<>(responseData, HttpStatus.OK);
-
   }
 
-  @PostMapping("/create")
+  @GetMapping("/tutorials")
+  public ResponseEntity<List<Tutorial>> getAllTutorials(@RequestParam(required = false) String title) {
+
+    List<Tutorial> tutorials = tutorialService.getAllTutorials(title);
+
+    if (tutorials.isEmpty()) {
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    return new ResponseEntity<>(tutorials, HttpStatus.OK);
+  }
+
+  @PostMapping("/tutorials/create")
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   public ResponseEntity<ApiResponse<Tutorial>> storeData(@RequestBody TutorialRequest request) {
     Tutorial add = tutorialService.create(request);
