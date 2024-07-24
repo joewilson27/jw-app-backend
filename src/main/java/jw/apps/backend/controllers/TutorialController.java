@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -61,4 +62,11 @@ public class TutorialController {
     //return ResponseEntity.ok(new MessageResponse("Data added successfully")); 
   }
 
+  @GetMapping("/tutorials/{id}")
+  public ResponseEntity<Tutorial> details(@PathVariable("id") long id) {
+    
+    Tutorial data = tutorialService.details(id);
+
+    return new ResponseEntity<>(data, HttpStatus.OK);
+  }
 }

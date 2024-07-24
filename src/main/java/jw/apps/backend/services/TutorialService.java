@@ -10,6 +10,7 @@ import jakarta.transaction.Transactional;
 import jw.apps.backend.dto.request.TutorialRequest;
 import jw.apps.backend.entity.Tutorial;
 import jw.apps.backend.helpers.InternalServerErrorException;
+import jw.apps.backend.helpers.ResourceNotFoundException;
 import jw.apps.backend.repository.TutorialRepository;
 import jakarta.validation.ConstraintViolationException;
 
@@ -57,9 +58,20 @@ public class TutorialService {
       return tutorials;
 
     } catch (Exception e) {
-
       throw new InternalServerErrorException("Internal Server Error");
+    }
+  }
+
+  public Tutorial details(long id) {
+    try {
+      Tutorial data = tutorialRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Data not found!"));
+
+      return data;
       
+    } catch (ResourceNotFoundException e) {
+      throw new ResourceNotFoundException("Data not found!");
+    } catch (Exception e) {
+      throw new InternalServerErrorException("Internal Server Error");
     }
   }
 
