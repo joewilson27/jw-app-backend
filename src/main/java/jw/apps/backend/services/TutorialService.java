@@ -75,4 +75,29 @@ public class TutorialService {
     }
   }
 
+  @Transactional
+  public Tutorial update(long id, TutorialRequest request) {
+    try {
+
+      validationService.validate(request);
+
+      Tutorial data = tutorialRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Data not found!"));
+
+      data.setTitle(request.getTitle());
+      data.setDescription(request.getDescription());
+      data.setPublished(request.isPublished());
+
+      tutorialRepository.save(data);
+
+      return data;
+
+    } catch (ResourceNotFoundException e) {
+      throw new ResourceNotFoundException("Data not found!");
+    } catch (ConstraintViolationException e) {
+      throw new ConstraintViolationException(e.getMessage(), e.getConstraintViolations());
+    } catch (Exception e) {
+      throw new InternalServerErrorException("Internal Server Error");
+    }
+  }
+
 }
