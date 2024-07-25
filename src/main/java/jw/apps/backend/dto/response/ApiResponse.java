@@ -13,12 +13,14 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ApiResponse<T> {
 
+  private Integer code;
+
   private String status;
 
   private String message;
 
   private T data;
-
+ 
   private PaginationResponse pagination;
   
   private ErrorResponse error;
@@ -26,5 +28,4 @@ public class ApiResponse<T> {
   @Builder.Default
   private LocalDateTime timestamp = LocalDateTime.now();
   
-
 }

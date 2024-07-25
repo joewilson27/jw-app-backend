@@ -30,6 +30,7 @@ public class TutorialController {
   public ResponseEntity<ApiResponse<List<String>>> testTutorial() {
 
     ApiResponse<List<String>> responseData = new ApiResponse<>();
+    responseData.setCode(200);
     responseData.setStatus("success");
     responseData.setMessage("Welcome to Module Tutorial");
   
@@ -54,6 +55,7 @@ public class TutorialController {
     Tutorial add = tutorialService.create(request);
 
     ApiResponse<Tutorial> responseData = new ApiResponse<>();
+    responseData.setCode(200);
     responseData.setStatus("success");
     responseData.setMessage("Data added successfully");
     responseData.setData(add);
@@ -63,10 +65,16 @@ public class TutorialController {
   }
 
   @GetMapping("/tutorials/{id}")
-  public ResponseEntity<Tutorial> details(@PathVariable("id") long id) {
+  public ResponseEntity<ApiResponse<Tutorial>> details(@PathVariable("id") long id) {
     
     Tutorial data = tutorialService.details(id);
 
-    return new ResponseEntity<>(data, HttpStatus.OK);
+    ApiResponse<Tutorial> responseData = new ApiResponse<>();
+    responseData.setCode(200);
+    responseData.setStatus("success");
+    responseData.setMessage("Detail tutorial data");
+    responseData.setData(data);
+
+    return new ResponseEntity<>(responseData, HttpStatus.OK);
   }
 }

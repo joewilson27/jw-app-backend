@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
-import jw.apps.backend.dto.response.ErrorResponse;
+import jw.apps.backend.dto.response.ApiResponse;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -21,11 +21,13 @@ public class GlobalExceptionHandler {
    */
   @ExceptionHandler(BadRequestException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
-  public ResponseEntity<?> handleBadRequestException(BadRequestException ex) {
+  public ResponseEntity<ApiResponse<?>> handleBadRequestException(BadRequestException ex) {
     
-    ErrorResponse err = new ErrorResponse();
+    ApiResponse<String> err = new ApiResponse<>();
     err.setCode(400);
+    err.setStatus("error");
     err.setMessage(ex.getMessage());
+    err.setData(null);
 
     return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
   }
@@ -37,10 +39,14 @@ public class GlobalExceptionHandler {
    */
   @ExceptionHandler(ResourceNotFoundException.class)
   @ResponseStatus(HttpStatus.NOT_FOUND)
-  public ResponseEntity<?> handleResourceNotFoundException(ResourceNotFoundException ex) {
-      ErrorResponse err = new ErrorResponse();
+  public ResponseEntity<ApiResponse<?>> handleResourceNotFoundException(ResourceNotFoundException ex) {
+
+      ApiResponse<String> err = new ApiResponse<>();
       err.setCode(404);
+      err.setStatus("error");
       err.setMessage(ex.getMessage());
+      err.setData(null);
+
       return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
   }
 
@@ -51,29 +57,38 @@ public class GlobalExceptionHandler {
    * @return
    */
   @ExceptionHandler(HttpMessageNotReadableException.class)
-  public ResponseEntity<?> handleMessageNotReadableException(HttpMessageNotReadableException ex, HttpServletRequest request) {
-    ErrorResponse err = new ErrorResponse();
-    err.setCode(404);
-    err.setMessage("Required request body is missing");
+  public ResponseEntity<ApiResponse<?>> handleMessageNotReadableException(HttpMessageNotReadableException ex, HttpServletRequest request) {
+
+    ApiResponse<String> err = new ApiResponse<>();
+      err.setCode(404);
+      err.setStatus("error");
+      err.setMessage(ex.getMessage());
+      err.setData(null);
 
     return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
   }
 
   // directly catch exceptions without using custom exception classes
   @ExceptionHandler(ConstraintViolationException.class)
-  public ResponseEntity<?> handleConstraintViolationException(ConstraintViolationException ex, HttpServletRequest request) {
-    ErrorResponse err = new ErrorResponse();
+  public ResponseEntity<ApiResponse<?>> handleConstraintViolationException(ConstraintViolationException ex, HttpServletRequest request) {
+
+    ApiResponse<String> err = new ApiResponse<>();
     err.setCode(404);
+    err.setStatus("error");
     err.setMessage(ex.getMessage());
+    err.setData(null);
 
     return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler(InternalServerErrorException.class)
-  public ResponseEntity<?> handleInternalServerErrorException(InternalServerErrorException ex, HttpServletRequest request) {
-    ErrorResponse err = new ErrorResponse();
+  public ResponseEntity<ApiResponse<?>> handleInternalServerErrorException(InternalServerErrorException ex, HttpServletRequest request) {
+
+    ApiResponse<String> err = new ApiResponse<>();
     err.setCode(500);
+    err.setStatus("error");
     err.setMessage(ex.getMessage());
+    err.setData(null);
 
     return new ResponseEntity<>(err, HttpStatus.INTERNAL_SERVER_ERROR);
   }
