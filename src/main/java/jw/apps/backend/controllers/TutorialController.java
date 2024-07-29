@@ -1,6 +1,7 @@
 package jw.apps.backend.controllers;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -48,6 +49,22 @@ public class TutorialController {
     }
 
     return new ResponseEntity<>(tutorials, HttpStatus.OK);
+  }
+
+  @GetMapping("/tutorialspage")
+  public ResponseEntity<Map<String, Object>> getAllTutorialsPage(
+    @RequestParam(required = false) String title,
+    @RequestParam(defaultValue = "0") int page,
+    @RequestParam(defaultValue = "3") int size,
+    @RequestParam(defaultValue = "id,desc") String[] sort
+    ) {
+      Map<String, Object> data = tutorialService.getAllTutorialsPage(title, page, size, sort);
+
+      if (data == null) {
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+      }
+
+      return new ResponseEntity<>(data, HttpStatus.OK);
   }
 
   @PostMapping("/tutorials/create")
