@@ -4,14 +4,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
+import jakarta.persistence.criteria.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
+import org.springframework.data.jpa.domain.Specification;
 
 import org.springframework.transaction.annotation.Transactional;
 import jw.apps.backend.dto.request.TutorialRequest;
@@ -155,7 +159,7 @@ public class TutorialService {
       }
 
       Map<String, Object> response = new HashMap<>();
-      response.put("tutorials", tutorials);
+      response.put("data", tutorials);
       response.put("currentPage", pageTuts.getNumber());
       response.put("totalItems", pageTuts.getTotalElements());
       response.put("totalPages", pageTuts.getTotalPages());
@@ -165,6 +169,43 @@ public class TutorialService {
       logger.error("An Error Message from getAllTutorialsPage ", e);
       throw new InternalServerErrorException("Internal Server Error");
     }
+  }
+
+  @Transactional(readOnly = true)
+  public Page<Tutorial> getAllDatas(String title, int page, int size, String[] sort) {
+    try {
+      Specification<Tutorial> specification = (root, query, builder) -> {
+        List<Predicate> predicates = new ArrayList<>();
+        if (Objects.nonNull(title)) {
+          predicates.add(builder.like(root.get("title"), "%" + title + "%"));
+        }
+        return query.where(predicates.toArray(new Predicate[]{})).getRestriction();
+      };
+
+      Pageable pageable = PageRequest.of(page, size);
+      Page<Tutorial> tutorials = tutorialRepository.findAll(specification, pageable);
+      List<Tutorial> result = tutorials.getContent().stream()
+                                                 .map(tutorial -> setTutorial(tutorial))
+                                                 .toList();
+
+      return new PageImpl<>(result, pageable, tutorials.getTotalElements());                                          
+    } catch (Exception e) {
+
+      logger.error("An Error Message from getAllTutorialsPage ", e);
+      throw new InternalServerErrorException("Internal Server Error");
+
+    }
+  }
+
+  private Tutorial setTutorial(Tutorial data) {
+
+    Tutorial t = new Tutorial();
+    t.setId(data.getId());
+    t.setTitle(data.getTitle());
+    t.setDescription(data.getDescription());
+    t.setPublished(data.isPublished());
+
+    return t;
   }
 
 }

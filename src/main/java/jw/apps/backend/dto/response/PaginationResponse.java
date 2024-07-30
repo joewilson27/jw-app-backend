@@ -13,8 +13,6 @@ public class PaginationResponse {
 
   private int totalPages;
 
-  private int pageSize;
-
   private long totalItems;
   
 }

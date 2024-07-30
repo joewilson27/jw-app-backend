@@ -1,5 +1,6 @@
 package jw.apps.backend.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -18,8 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jw.apps.backend.dto.request.TutorialRequest;
 import jw.apps.backend.dto.response.ApiResponse;
+import jw.apps.backend.dto.response.PaginationResponse;
 import jw.apps.backend.entity.Tutorial;
 import jw.apps.backend.services.TutorialService;
+import org.springframework.data.domain.Page;
 
 @RestController
 @RequestMapping("/api")
@@ -55,7 +58,7 @@ public class TutorialController {
   public ResponseEntity<Map<String, Object>> getAllTutorialsPage(
     @RequestParam(required = false) String title,
     @RequestParam(defaultValue = "0") int page,
-    @RequestParam(defaultValue = "3") int size,
+    @RequestParam(defaultValue = "5") int size,
     @RequestParam(defaultValue = "id,desc") String[] sort
     ) {
       Map<String, Object> data = tutorialService.getAllTutorialsPage(title, page, size, sort);
@@ -65,6 +68,34 @@ public class TutorialController {
       }
 
       return new ResponseEntity<>(data, HttpStatus.OK);
+  }
+
+  @GetMapping("/data-tutorials")
+  public ResponseEntity<ApiResponse<List<Tutorial>>> getAllDatas(
+    @RequestParam(required = false) String title,
+    @RequestParam(defaultValue = "0") int page,
+    @RequestParam(defaultValue = "5") int size,
+    @RequestParam(defaultValue = "id,desc") String[] sort
+    ) {
+      Page<Tutorial> data = tutorialService.getAllDatas(title, page, size, sort);
+
+      if (data == null) {
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+      }
+
+      ApiResponse<List<Tutorial>> responseData = new ApiResponse<>();
+      responseData.setCode(200);
+      responseData.setStatus("success");
+      responseData.setMessage("Get All Datas");
+      responseData.setData(data.getContent());
+      
+      PaginationResponse paginate = new PaginationResponse();
+      paginate.setCurrentPage(data.getNumber());
+      paginate.setTotalPages(data.getTotalPages());
+      paginate.setTotalItems(data.getTotalElements());
+      responseData.setPagination(paginate);
+
+      return new ResponseEntity<>(responseData, HttpStatus.OK);
   }
 
   @PostMapping("/tutorials/create")

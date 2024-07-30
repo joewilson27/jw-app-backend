@@ -6,12 +6,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 import jw.apps.backend.entity.Tutorial;
 
 @Repository
-public interface TutorialRepository extends JpaRepository<Tutorial, Long> {
+public interface TutorialRepository extends JpaRepository<Tutorial, Long>, JpaSpecificationExecutor<Tutorial> {
 
   List<Tutorial> findByPublished(boolean published);
   List<Tutorial> findByTitleContaining(String title);

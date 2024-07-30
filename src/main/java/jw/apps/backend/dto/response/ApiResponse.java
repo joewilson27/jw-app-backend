@@ -23,8 +23,6 @@ public class ApiResponse<T> {
  
   private PaginationResponse pagination;
   
-  private ErrorResponse error;
-
   @Builder.Default
   private LocalDateTime timestamp = LocalDateTime.now();
   
