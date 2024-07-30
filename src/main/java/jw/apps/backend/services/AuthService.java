@@ -12,7 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import jw.apps.backend.dto.request.SigninRequest;
 import jw.apps.backend.dto.request.SignupRequest;
 import jw.apps.backend.dto.response.AuthLoginResponse;
@@ -133,6 +133,7 @@ public class AuthService {
     userRepository.save(user);
   }
 
+  @Transactional(readOnly = true)
   public AuthLoginResponse signIn(SigninRequest request) {
     System.out.println("1 signIn");
     try {

@@ -13,7 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
 
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import jw.apps.backend.dto.request.TutorialRequest;
 import jw.apps.backend.entity.Tutorial;
 import jw.apps.backend.helpers.InternalServerErrorException;
@@ -57,6 +57,7 @@ public class TutorialService {
     }
   }
 
+  @Transactional(readOnly = true)
   public List<Tutorial> getAllTutorials(String title) {
     try {
       List<Tutorial> tutorials = new ArrayList<>();
@@ -73,6 +74,7 @@ public class TutorialService {
     }
   }
 
+  @Transactional(readOnly = true)
   public Tutorial details(long id) {
     try {
       Tutorial data = tutorialRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Data not found!"));
@@ -120,6 +122,7 @@ public class TutorialService {
     return Sort.Direction.ASC;
   }
 
+  @Transactional(readOnly = true)
   public Map<String, Object> getAllTutorialsPage(String title, int page, int size, String[] sort) {
     try {
       List<Order> orders = new ArrayList<Order>();
