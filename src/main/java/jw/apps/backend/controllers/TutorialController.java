@@ -63,9 +63,9 @@ public class TutorialController {
     ) {
       Map<String, Object> data = tutorialService.getAllTutorialsPage(title, page, size, sort);
 
-      if (data == null) {
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-      }
+      // if (data == null) {
+      //   return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+      // }
 
       return new ResponseEntity<>(data, HttpStatus.OK);
   }
@@ -78,10 +78,6 @@ public class TutorialController {
     @RequestParam(defaultValue = "id,desc") String[] sort
     ) {
       Page<Tutorial> data = tutorialService.getAllDatas(title, page, size, sort);
-
-      if (data == null) {
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-      }
 
       ApiResponse<List<Tutorial>> responseData = new ApiResponse<>();
       responseData.setCode(200);

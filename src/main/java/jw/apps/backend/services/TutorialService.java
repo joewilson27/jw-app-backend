@@ -154,9 +154,9 @@ public class TutorialService {
 
       tutorials = pageTuts.getContent();
       
-      if (tutorials.isEmpty()) {
-        return null; 
-      }
+      // if (tutorials.isEmpty()) {
+      //   return null; 
+      // }
 
       Map<String, Object> response = new HashMap<>();
       response.put("data", tutorials);
@@ -174,6 +174,21 @@ public class TutorialService {
   @Transactional(readOnly = true)
   public Page<Tutorial> getAllDatas(String title, int page, int size, String[] sort) {
     try {
+      // list order
+      List<Order> orders = new ArrayList<Order>();
+      if (sort[0].contains(",")) {
+        // will sort more than 2 fields
+        // sortOrder="field, direction"
+        for (String sortOrder: sort) {
+          String[] _sort = sortOrder.split(",");
+          orders.add(new Order(getSortDirection(_sort[1]), _sort[0]));
+        }
+      } else {
+        // sort=[field, direction]
+        orders.add(new Order(getSortDirection(sort[1]), sort[0]));
+      }
+
+      // filter by
       Specification<Tutorial> specification = (root, query, builder) -> {
         List<Predicate> predicates = new ArrayList<>();
         if (Objects.nonNull(title)) {
@@ -182,30 +197,17 @@ public class TutorialService {
         return query.where(predicates.toArray(new Predicate[]{})).getRestriction();
       };
 
-      Pageable pageable = PageRequest.of(page, size);
-      Page<Tutorial> tutorials = tutorialRepository.findAll(specification, pageable);
-      List<Tutorial> result = tutorials.getContent().stream()
-                                                 .map(tutorial -> setTutorial(tutorial))
-                                                 .toList();
+      Pageable pageable = PageRequest.of(page, size, Sort.by(orders));
+      Page<Tutorial> result = tutorialRepository.findAll(specification, pageable);
 
-      return new PageImpl<>(result, pageable, tutorials.getTotalElements());                                          
+      return result;
+      
     } catch (Exception e) {
 
       logger.error("An Error Message from getAllTutorialsPage ", e);
       throw new InternalServerErrorException("Internal Server Error");
 
     }
-  }
-
-  private Tutorial setTutorial(Tutorial data) {
-
-    Tutorial t = new Tutorial();
-    t.setId(data.getId());
-    t.setTitle(data.getTitle());
-    t.setDescription(data.getDescription());
-    t.setPublished(data.isPublished());
-
-    return t;
   }
 
 }
